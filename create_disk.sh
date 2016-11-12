@@ -67,6 +67,14 @@ echo "*** extracting template..."
 tar -xzpf "$template" -C target
 
 
+echo "*** generating fstab..."
+cat >target/etc/fstab <<END
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+UUID="$(blkid -o value -s UUID $partdev)"  /  ext4  errors=remount-ro  0 1
+END
+
 
 echo "*** performing installation steps..."
 
