@@ -45,6 +45,14 @@ kpartx -a $loopdev
 partdev=/dev/mapper/$(basename $loopdev)p1
 echo $partdev
 
+# the partitions can take a little while to show up; wait
+timeout=60
+while [[ ! -e $partdev && $timeout > 0 ]]; do
+    sleep 1
+    timeout=$(( $timeout - 1 ))
+done
+
+
 # create a filesystem on the partition
 mkfs.ext4 -q $partdev
 
