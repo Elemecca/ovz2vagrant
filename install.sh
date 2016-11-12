@@ -81,5 +81,17 @@ apt-get install --assume-yes --no-install-recommends \
 
 
 echo "* installing bootloader..."
+
+cat >>/etc/default/grub <<'END'
+
+# disable "predicatble interface names"
+# unfortunately they make it so we can't predict the interface
+# name for use in scripts without knowing about the hardware
+GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX net.ifnames=0 biosdevname=0"
+END
+
+# prevent discovery of OSes on the host computer
+chmod -f -x /etc/grub.d/30_os-prober /etc/grub.d/30_uefi-firmware
+
 update-grub
 grub-install "$bootdev"
